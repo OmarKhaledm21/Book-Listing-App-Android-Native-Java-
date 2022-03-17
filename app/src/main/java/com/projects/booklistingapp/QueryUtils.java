@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class QueryUtils {
     private static final String LOG_TAG = "UTILS";
 
+    //TODO USE OPT JSON
     public static ArrayList<Book> parseJsonResponse(String jsonResponse){
         ArrayList<Book> books = new ArrayList<>();
         try {
@@ -28,19 +29,27 @@ public class QueryUtils {
 
                 String title = volumeInfo.getString("title");
 
-                final JSONArray authorsArray = volumeInfo.getJSONArray("authors");
-                String[] authors = new String[authorsArray.length()];
-                for(int j=0; j<authorsArray.length(); j++){
-                    authors[j] = authorsArray.getString(j);
-                }
 
+                final JSONArray authorsArray = volumeInfo.optJSONArray("authors");
+                String[] authors;
+                if(authorsArray!=null) {
+                    authors = new String[authorsArray.length()];
+                    for (int j = 0; j < authorsArray.length(); j++) {
+                        authors[j] = authorsArray.getString(j);
+                    }
+                }else{
+                    authors = new String[1];
+                    authors[0]="";
+                }
                 String publishDate = volumeInfo.getString("publishedDate");
                 String description = volumeInfo.getString("description");
                 String previewLink = volumeInfo.getString("infoLink");
 
-                final JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                String thumbnail_link = imageLinks.getString("smallThumbnail");
-
+               // final JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
+                String thumbnail_link = "";
+//                if(imageLinks!=null) {
+//                    thumbnail_link = imageLinks.getString("smallThumbnail");
+//                }
                 books.add(new Book(title,authors,publishDate,description,previewLink,thumbnail_link));
 
             }

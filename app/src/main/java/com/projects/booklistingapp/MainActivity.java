@@ -12,6 +12,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.book_name_input = "grokkingalgorithms";
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // Get details on the currently active default data network
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -37,7 +41,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void updateUI(List<Book> bookList){
-
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb);
+        progressBar.setVisibility(View.GONE);
+        ListView listView = (ListView) findViewById(R.id.list);
+        BooksAdapter booksAdapter = new BooksAdapter(MainActivity.this,0,bookList);
+        listView.setAdapter(booksAdapter);
     }
 
     @NonNull
@@ -58,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    class BooksAsyncTask extends AsyncTaskLoader<List<Book>>{
+    static class BooksAsyncTask extends AsyncTaskLoader<List<Book>>{
         private String book_name;
         public BooksAsyncTask(@NonNull Context context,String book_name) {
             super(context);
