@@ -28,10 +28,10 @@ public class BooksAdapter extends ArrayAdapter<Book> {
 
         Book book = getItem(position);
 
-        TextView titleView = (TextView) listItemView.findViewById(R.id.title);
+        TextView titleView = (TextView) listItemView.findViewById(R.id.book_title);
         titleView.setText(book.getTitle());
 
-        TextView authorView = (TextView) listItemView.findViewById(R.id.authors);
+        TextView authorView = (TextView) listItemView.findViewById(R.id.book_authors);
         StringBuilder authors = new StringBuilder();
         for(int i=0; i<book.getAuthors().length; i++){
             authors.append( book.getAuthors()[i]);
@@ -40,8 +40,6 @@ public class BooksAdapter extends ArrayAdapter<Book> {
         String au = authors.toString();
         authorView.setText(au);
 
-        TextView publishDateView = (TextView) listItemView.findViewById(R.id.publish_date);
-        publishDateView.setText(book.getPublishDate());
 
         return listItemView;
     }

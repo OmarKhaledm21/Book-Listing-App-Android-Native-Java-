@@ -25,32 +25,32 @@ public class QueryUtils {
             JSONArray itemsArray = root.getJSONArray("items");
             for(int i=0; i<itemsArray.length(); i++){
                 final JSONObject item = itemsArray.getJSONObject(i);
-                final JSONObject volumeInfo = item.getJSONObject("volumeInfo");
+                final JSONObject volumeInfo = item.optJSONObject("volumeInfo");
 
-                String title = volumeInfo.getString("title");
-
-
-                final JSONArray authorsArray = volumeInfo.optJSONArray("authors");
-                String[] authors;
-                if(authorsArray!=null) {
-                    authors = new String[authorsArray.length()];
-                    for (int j = 0; j < authorsArray.length(); j++) {
-                        authors[j] = authorsArray.getString(j);
+                if(volumeInfo!=null) {
+                    String title = volumeInfo.optString("title");
+                    final JSONArray authorsArray = volumeInfo.optJSONArray("authors");
+                    String[] authors;
+                    if (authorsArray != null) {
+                        authors = new String[authorsArray.length()];
+                        for (int j = 0; j < authorsArray.length(); j++) {
+                            authors[j] = authorsArray.getString(j);
+                        }
+                    } else {
+                        authors = new String[1];
+                        authors[0] = "";
                     }
-                }else{
-                    authors = new String[1];
-                    authors[0]="";
-                }
-                String publishDate = volumeInfo.getString("publishedDate");
-                String description = volumeInfo.getString("description");
-                String previewLink = volumeInfo.getString("infoLink");
+                    String publishDate = volumeInfo.optString("publishedDate");
+                    String description = volumeInfo.optString("description");
+                    String previewLink = volumeInfo.optString("infoLink");
 
-               // final JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                String thumbnail_link = "";
+                    // final JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
+                    String thumbnail_link = "";
 //                if(imageLinks!=null) {
 //                    thumbnail_link = imageLinks.getString("smallThumbnail");
 //                }
-                books.add(new Book(title,authors,publishDate,description,previewLink,thumbnail_link));
+                    books.add(new Book(title, authors, publishDate, description, previewLink, thumbnail_link));
+                }
 
             }
 
