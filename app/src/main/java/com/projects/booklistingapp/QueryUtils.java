@@ -1,5 +1,7 @@
 package com.projects.booklistingapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -18,16 +20,16 @@ public class QueryUtils {
     private static final String LOG_TAG = "UTILS";
 
     //TODO USE OPT JSON
-    public static ArrayList<Book> parseJsonResponse(String jsonResponse){
+    public static ArrayList<Book> parseJsonResponse(String jsonResponse) {
         ArrayList<Book> books = new ArrayList<>();
         try {
             JSONObject root = new JSONObject(jsonResponse);
             JSONArray itemsArray = root.getJSONArray("items");
-            for(int i=0; i<itemsArray.length(); i++){
+            for (int i = 0; i < itemsArray.length(); i++) {
                 final JSONObject item = itemsArray.getJSONObject(i);
                 final JSONObject volumeInfo = item.optJSONObject("volumeInfo");
 
-                if(volumeInfo!=null) {
+                if (volumeInfo != null) {
                     String title = volumeInfo.optString("title");
                     final JSONArray authorsArray = volumeInfo.optJSONArray("authors");
                     String[] authors;
@@ -44,23 +46,38 @@ public class QueryUtils {
                     String description = volumeInfo.optString("description");
                     String previewLink = volumeInfo.optString("infoLink");
 
-                    // final JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
+                    final JSONObject imageLinks = volumeInfo.optJSONObject("imageLinks");
                     String thumbnail_link = "";
-//                if(imageLinks!=null) {
-//                    thumbnail_link = imageLinks.getString("smallThumbnail");
-//                }
-                    books.add(new Book(title, authors, publishDate, description, previewLink, thumbnail_link));
+                    Bitmap img = null;
+                    if (imageLinks != null) {
+                        thumbnail_link = imageLinks.getString("smallThumbnail");
+                        StringBuilder httpsLink = new StringBuilder();
+                        boolean added = true;
+                        for(int qq=0; qq<thumbnail_link.length(); qq++){
+                            if(thumbnail_link.charAt(qq)=='p' && added){
+                                httpsLink.append(thumbnail_link.charAt(qq));
+                                httpsLink.append('s');
+                                added= false;
+                            }else {
+                                httpsLink.append(thumbnail_link.charAt(qq));
+                            }
+                        }
+                        thumbnail_link = httpsLink.toString();
+                        img = getBitmapFromURL(thumbnail_link);
+                        Log.v("LINK_BITMAP",thumbnail_link);
+                    }
+                    books.add(new Book(title, authors, publishDate, description, previewLink, thumbnail_link, img));
                 }
 
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return books;
     }
 
-    public static URL getURL(String book_name){
+    public static URL getURL(String book_name) {
         StringBuilder base = new StringBuilder();
         base.append("https://www.googleapis.com/books/v1/volumes?q=");
         base.append(book_name);
@@ -70,13 +87,13 @@ public class QueryUtils {
         URL url = null;
         try {
             url = new URL(fullUrl);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return url;
     }
 
-    public static String readFromStream(InputStream inputStream){
+    public static String readFromStream(InputStream inputStream) {
         StringBuilder result = new StringBuilder();
         try {
             if (inputStream != null) {
@@ -88,7 +105,7 @@ public class QueryUtils {
                     line = bufferedReader.readLine();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result.toString();
@@ -96,7 +113,7 @@ public class QueryUtils {
 
     public static String makeHttpRequest(URL url) throws IOException {
         String response = "";
-        if(url==null){
+        if (url == null) {
             return response;
         }
         HttpURLConnection urlConnection = null;
@@ -128,5 +145,24 @@ public class QueryUtils {
         return response;
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            Log.e("src", src);
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            Log.e("Bitmap", "returned");
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Exception", e.getMessage());
+            return null;
+        }
+    }
 
 }
