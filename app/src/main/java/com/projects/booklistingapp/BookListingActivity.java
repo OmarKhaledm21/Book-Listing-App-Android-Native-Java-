@@ -1,12 +1,14 @@
 package com.projects.booklistingapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +33,9 @@ public class BookListingActivity extends AppCompatActivity implements LoaderMana
     private ProgressBar progressBar;
     private TextView textView;
 
-    private String query_book;
+    private BooksAdapter booksAdapter;
 
+    private String query_book;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,12 +54,17 @@ public class BookListingActivity extends AppCompatActivity implements LoaderMana
         textView = (TextView) findViewById(R.id.empty_view);
 
         startLoadingBooks();
+
+
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+
+                Intent intent = new Intent(BookListingActivity.this,MainActivity.class);
+                startActivity(intent);
                 this.finish();
                 return true;
         }
@@ -75,8 +83,9 @@ public class BookListingActivity extends AppCompatActivity implements LoaderMana
 
     public void updateUI(List<Book> bookList) {
         progressBar.setVisibility(View.GONE);
-        BooksAdapter booksAdapter = new BooksAdapter(BookListingActivity.this, 0, bookList);
+        booksAdapter = new BooksAdapter(BookListingActivity.this, 0, bookList);
         listView.setAdapter(booksAdapter);
+
     }
 
     @NonNull

@@ -2,4 +2,7 @@
     <string name="app_name">Book Listing App</string>
     <string name="confirmSuggest">Get Suggestions</string>
     <string name="no_internet_connection">NO CONNECTION!</string>
+    <string name="no_link_provided">Cannot find any links for the selected item!</string>
+    <string name="publish_date">NO PUBLISH DATE PROVIDED</string>
+    <string name="my_wish_list">My Wish List</string>
 </resources>

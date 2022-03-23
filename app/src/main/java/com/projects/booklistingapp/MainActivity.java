@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +17,9 @@ public class MainActivity extends AppCompatActivity{
     private EditText input;
     private Button confirm;
     private ListView listView;
+
+    private WishList wishList;
+
     private View.OnClickListener btnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -42,8 +48,22 @@ public class MainActivity extends AppCompatActivity{
         confirm.setOnClickListener(btnListener);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu1:
+                Intent intent = new Intent(MainActivity.this,WishListActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
