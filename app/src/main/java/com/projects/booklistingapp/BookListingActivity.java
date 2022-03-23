@@ -2,7 +2,10 @@ package com.projects.booklistingapp;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,6 +32,7 @@ public class BookListingActivity extends AppCompatActivity implements LoaderMana
     private TextView textView;
 
     private String query_book;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class BookListingActivity extends AppCompatActivity implements LoaderMana
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+        }else{
+            textView.setText(R.string.no_internet_connection);
         }
     }
 

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Book Listing App</string>
     <string name="confirmSuggest">Get Suggestions</string>
+    <string name="no_internet_connection">NO CONNECTION!</string>
 </resources>
