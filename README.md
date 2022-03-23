@@ -5,6 +5,6 @@
 ### Also Http connections were opened to send requests and recieve json responses.
 
 <img src="https://github.com/OmarKhaledm21/Book-Listing-App-Android-Native-Java-/blob/master/SS/Screenshot_20220323_054747.png" alt="drawing" width="200"/>
-![alt text]()
-![alt text](https://github.com/OmarKhaledm21/Book-Listing-App-Android-Native-Java-/blob/master/SS/Screenshot_20220323_054816.png)
+<img src="https://github.com/OmarKhaledm21/Book-Listing-App-Android-Native-Java-/blob/master/SS/Screenshot_20220323_054816.png" alt="drawing" width="200"/>
+
 
