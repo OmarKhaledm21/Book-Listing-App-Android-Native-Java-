@@ -18,8 +18,6 @@ public class MainActivity extends AppCompatActivity{
     private Button confirm;
     private ListView listView;
 
-    private WishList wishList;
-
     private View.OnClickListener btnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {

@@ -28,7 +28,7 @@ public class QueryUtils {
             for (int i = 0; i < itemsArray.length(); i++) {
                 final JSONObject item = itemsArray.getJSONObject(i);
                 final JSONObject volumeInfo = item.optJSONObject("volumeInfo");
-
+                String bookId = item.optString("id");
                 if (volumeInfo != null) {
                     String title = volumeInfo.optString("title");
                     final JSONArray authorsArray = volumeInfo.optJSONArray("authors");
@@ -53,20 +53,20 @@ public class QueryUtils {
                         thumbnail_link = imageLinks.getString("smallThumbnail");
                         StringBuilder httpsLink = new StringBuilder();
                         boolean added = true;
-                        for(int qq=0; qq<thumbnail_link.length(); qq++){
-                            if(thumbnail_link.charAt(qq)=='p' && added){
+                        for (int qq = 0; qq < thumbnail_link.length(); qq++) {
+                            if (thumbnail_link.charAt(qq) == 'p' && added) {
                                 httpsLink.append(thumbnail_link.charAt(qq));
                                 httpsLink.append('s');
-                                added= false;
-                            }else {
+                                added = false;
+                            } else {
                                 httpsLink.append(thumbnail_link.charAt(qq));
                             }
                         }
                         thumbnail_link = httpsLink.toString();
                         img = getBitmapFromURL(thumbnail_link);
-                        Log.v("LINK_BITMAP",thumbnail_link);
+                        Log.v("LINK_BITMAP", bookId);
                     }
-                    books.add(new Book(title, authors, publishDate, description, previewLink, thumbnail_link, img));
+                    books.add(new Book(bookId, title, authors, publishDate, description, previewLink, thumbnail_link, img));
                 }
 
             }
@@ -77,11 +77,81 @@ public class QueryUtils {
         return books;
     }
 
+    public static ArrayList<Book> parseJsonResponse(ArrayList<String> responses) {
+        ArrayList<Book> booksList = new ArrayList<>();
+        try {
+            for (int i = 0; i < responses.size(); i++) {
+                final JSONObject root = new JSONObject(responses.get(i));
+                final JSONObject volumeInfo = root.optJSONObject("volumeInfo");
+                String bookId = root.optString("id");
+                if (volumeInfo != null) {
+                    String title = volumeInfo.optString("title");
+                    final JSONArray authorsArray = volumeInfo.optJSONArray("authors");
+                    String[] authors;
+                    if (authorsArray != null) {
+                        authors = new String[authorsArray.length()];
+                        for (int j = 0; j < authorsArray.length(); j++) {
+                            authors[j] = authorsArray.getString(j);
+                        }
+                    } else {
+                        authors = new String[1];
+                        authors[0] = "";
+                    }
+                    String publishDate = volumeInfo.optString("publishedDate");
+                    String description = volumeInfo.optString("description");
+                    String previewLink = volumeInfo.optString("infoLink");
+
+                    final JSONObject imageLinks = volumeInfo.optJSONObject("imageLinks");
+                    String thumbnail_link = "";
+                    Bitmap img = null;
+                    if (imageLinks != null) {
+                        thumbnail_link = imageLinks.optString("smallThumbnail");
+                        StringBuilder httpsLink = new StringBuilder();
+                        boolean added = true;
+                        for (int qq = 0; qq < thumbnail_link.length(); qq++) {
+                            if (thumbnail_link.charAt(qq) == 'p' && added) {
+                                httpsLink.append(thumbnail_link.charAt(qq));
+                                httpsLink.append('s');
+                                added = false;
+                            } else {
+                                httpsLink.append(thumbnail_link.charAt(qq));
+                            }
+                        }
+                        thumbnail_link = httpsLink.toString();
+                        img = getBitmapFromURL(thumbnail_link);
+
+                    }
+                    Log.v("LINK_BITMAP_2", bookId);
+                    booksList.add(new Book(bookId, title, authors, publishDate, description, previewLink, thumbnail_link, img));
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return booksList;
+    }
+
     public static URL getURL(String book_name) {
         StringBuilder base = new StringBuilder();
         base.append("https://www.googleapis.com/books/v1/volumes?q=");
         base.append(book_name);
         base.append("&maxResults=10");
+        String fullUrl = base.toString();
+
+        URL url = null;
+        try {
+            url = new URL(fullUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
+    public static URL getBookURL(String id) {
+        StringBuilder base = new StringBuilder();
+        base.append("https://www.googleapis.com/books/v1/volumes/");
+        base.append(id);
         String fullUrl = base.toString();
 
         URL url = null;
@@ -142,6 +212,7 @@ public class QueryUtils {
                 inputStream.close();
             }
         }
+        Log.v("HTTP_RESP", response);
         return response;
     }
 

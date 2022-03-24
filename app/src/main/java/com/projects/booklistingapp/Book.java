@@ -3,6 +3,7 @@ package com.projects.booklistingapp;
 import android.graphics.Bitmap;
 
 public class Book {
+    private String Id;
     private String title;
     private String[] authors;
     private String publishDate;
@@ -10,8 +11,9 @@ public class Book {
     private String link;
     private String imageLink;
     private Bitmap bitmap;
-
-    public Book(String title, String[] authors, String publishDate, String description, String link, String imageLink,Bitmap bitmap) {
+    
+    public Book(String Id, String title, String[] authors, String publishDate, String description, String link, String imageLink, Bitmap bitmap) {
+        this.Id = Id;
         this.title = title;
         this.authors = authors;
         this.publishDate = publishDate;
@@ -75,5 +77,13 @@ public class Book {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 }

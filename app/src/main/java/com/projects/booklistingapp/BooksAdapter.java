@@ -3,6 +3,7 @@ package com.projects.booklistingapp;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 public class BooksAdapter extends ArrayAdapter<Book> {
-
+    private DBHelper db;
     public BooksAdapter(@NonNull Context context, int resource, @NonNull List<Book> books) {
         super(context, 0, books);
     }
@@ -74,8 +75,11 @@ public class BooksAdapter extends ArrayAdapter<Book> {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
-                   //Add book to wish list
+                Log.v("BOOK_DB_ID",book.getId());
+                if(isChecked && book.getId()!=null){
+                   db = new DBHelper(getContext());
+                    Log.v("BOOK_DB_ID",book.getId());
+                   db.addItem(book);
                 }else{
                     //Remove book from wish list
                 }
