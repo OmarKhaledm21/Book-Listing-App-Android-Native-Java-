@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,11 @@ public class BooksAdapter extends ArrayAdapter<Book> {
         TextView authorView = (TextView) listItemView.findViewById(R.id.book_authors);
         StringBuilder authors = new StringBuilder();
 
+        TextView description = (TextView) listItemView.findViewById(R.id.description);
+        if(book.getDescription()!= null && !book.getDescription().equals("")){
+            description.setText(book.getDescription());
+        }
+        description.setVisibility(View.GONE);
         for(int i=0; i<book.getAuthors().length; i++){
             authors.append( book.getAuthors()[i]);
             authors.append(", ");
@@ -59,7 +65,9 @@ public class BooksAdapter extends ArrayAdapter<Book> {
             imageView.setImageBitmap(book.getBitmap());
         }
 
-        listItemView.setOnClickListener(new View.OnClickListener() {
+        ImageButton imageBtn = (ImageButton) listItemView.findViewById(R.id.arrow);
+
+        imageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(book.getLink()!=null && !book.getLink().equals("")) {
@@ -68,6 +76,18 @@ public class BooksAdapter extends ArrayAdapter<Book> {
                 }else{
                     Toast.makeText(getContext(),R.string.no_link_provided,Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(description.getVisibility() == View.GONE){
+                    description.setVisibility(View.VISIBLE);
+                }else{
+                    description.setVisibility(View.GONE);
+                }
+
             }
         });
 
@@ -85,6 +105,8 @@ public class BooksAdapter extends ArrayAdapter<Book> {
                 }
             }
         });
+
+
 
         return listItemView;
     }
